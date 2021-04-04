@@ -1,0 +1,23 @@
+$DomainID = (Get-ADDomain).DistinguishedName
+$Company = "Company"
+$Departments = 'Marketing','Sales','Purchasing','Production','Research and Development','Management','IT','HR'
+$SubOUs = 'Users', 'Computers'
+
+
+New-ADOrganizationalUnit -Name $Company -Path $DomainID -ProtectedFromAccidentalDeletion $false
+
+$path1 = (Get-ADOrganizationalUnit -Filter * | Where-Object {$_.Name -like $Company}).DistinguishedName
+
+foreach($Department in $Departments){ 
+
+New-ADOrganizationalUnit -name $Department -Path $path1 -ProtectedFromAccidentalDeletion $false 
+
+$path2 = (Get-ADOrganizationalUnit -Filter * | Where-Object {$_.Name -like $Department}).DistinguishedName
+
+foreach($subOU in $SubOUs) {
+
+New-ADOrganizationalUnit -name $subOU -Path $path2 -ProtectedFromAccidentalDeletion $false 
+
+}
+
+} 
