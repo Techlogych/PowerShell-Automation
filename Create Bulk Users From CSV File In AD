@@ -1,0 +1,33 @@
+$ADUsers = Import-Csv -Path "C:\Scripts\Users.csv" -Delimiter ','
+
+$Pass = ConvertTo-SecureString "Password10X102" -AsPlainText -Force
+
+foreach($Aduser in $ADUsers){
+
+$FirstName = $Aduser.FirstName
+$MiddleName = $Aduser.MiddleName
+$LastName = $Aduser.LastName
+$Username = $Aduser.Username
+$Company = $Aduser.Company
+$Department = $Aduser.Department
+$JobTitle = $Aduser.JobTitle
+$Phone = $Aduser.Phone
+$Email = $Aduser.Email
+$OU = $Aduser.OU
+
+New-ADUser -Name "$FirstName $LastName"`
+-DisplayName "$FirstName $MiddleName $LastName" `
+-GivenName $FirstName `
+-OtherName $MiddleName `
+-Surname $LastName `
+-SamAccountName $Username `
+-Company $Company `
+-Department $Department `
+-Title $JobTitle `
+-MobilePhone $Phone `
+-EmailAddress $Email `
+-Path $OU `
+-AccountPassword $Pass `
+-ChangePasswordAtLogon $true `
+-Enabled $true
+}
