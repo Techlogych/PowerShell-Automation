@@ -1,0 +1,57 @@
+#Loading assemblies and creating Form
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+#Functions
+function lookup {
+$Input = $InputBox.Text
+
+$Result = Get-ADUser -Identity $Input -Properties * | Select-Object GivenName,OtherName,Surname,Company,Department,Title,MobilePhone,EmailAddress |Format-List | Out-String 
+
+$OutputBox.Text = $Result
+}
+
+
+#Creating Form
+$Form = New-Object System.Windows.Forms.Form
+$Form.Size = New-Object System.Drawing.Size(800,600)
+$Form.Text = "Console App"
+
+#Add inputBox
+$InputBox = New-Object System.Windows.Forms.TextBox
+$InputBox.Location = New-Object System.Drawing.Point(20,50)
+$InputBox.Size = New-Object System.Drawing.Size(200,20)
+
+$Form.Controls.Add($InputBox)
+
+#Add Label
+$Label = New-Object System.Windows.Forms.Label
+$Label.Text = "Enter the text here"
+$Label.Location = New-Object System.Drawing.Point(20,30)
+$Label.BackColor = "Transparent"
+$Label.AutoSize = $true
+
+$Form.Controls.Add($Label)
+
+#Add Button
+$Btn = New-Object System.Windows.Forms.Button
+$Btn.Location = New-Object System.Drawing.Point(20,90)
+$Btn.Size = New-Object System.Drawing.Size(200,40)
+$Btn.Text = "Show"
+$Btn.Add_click({lookup})
+
+$Form.Controls.Add($Btn)
+
+#Add outputBox
+$OutputBox = New-Object System.Windows.Forms.TextBox
+$OutputBox.Location = New-Object System.Drawing.Point(10,150)
+$OutputBox.Size = New-Object System.Drawing.Size(600,400)
+$OutputBox.Multiline = $true
+$OutputBox.ScrollBars = "Vertical"
+
+
+
+$Form.Controls.Add($OutputBox)
+
+$Form.ShowDialog()
+
